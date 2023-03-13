@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.senya.databinding.FragmentHomeBinding
 import com.example.senya.ui.fragment.BaseFragment
-
+// comment from home branch
 class HomeFragment: BaseFragment() {
 
     private var _binding: FragmentHomeBinding? = null
