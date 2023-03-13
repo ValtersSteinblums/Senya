@@ -1,10 +1,11 @@
-package com.example.senya.ui.fragment
+package com.example.senya.ui.fragment.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.senya.databinding.FragmentHomeBinding
+import com.example.senya.ui.fragment.BaseFragment
 
 class HomeFragment: BaseFragment() {
 
@@ -22,7 +23,12 @@ class HomeFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = binding.recyclerView
+        val homeAdapter = HomeFragmentAdapter {
+            // todo handle item being clicked - navigate
+        }
+
+        binding.recyclerView.adapter = homeAdapter
+        homeAdapter.setData(emptyList())
     }
 
     override fun onDestroyView() {

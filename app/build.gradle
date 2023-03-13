@@ -48,4 +48,8 @@ dependencies {
     // Navigation Components
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    // Picasso for images
+    implementation 'com.squareup.picasso:picasso:2.8'
+    //Moshi for JSON parsing
+    implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
 }
