@@ -1,5 +1,7 @@
 package com.example.senya.ui.fragment
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -42,7 +44,20 @@ class AttractionDetailFragment: BaseFragment() {
 
         binding.numbersOfFactsTextView.text = "${ attraction.facts.size } facts"
         binding.numbersOfFactsTextView.setOnClickListener {
-            //todo
+            val stringBuilder = StringBuilder("")
+            attraction.facts.forEach {
+                stringBuilder.append(it)
+                stringBuilder.append("\n\n")
+            }
+            val message = stringBuilder.toString().substring(0, stringBuilder.toString().lastIndexOf("\n"))
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("${attraction.title} Facts")
+                .setMessage(message)
+                .setPositiveButton("Ok") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .show()
         }
     }
 
