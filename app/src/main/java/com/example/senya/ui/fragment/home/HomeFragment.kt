@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.example.senya.R
 import com.example.senya.databinding.FragmentHomeBinding
 import com.example.senya.ui.fragment.BaseFragment
-// comment from home branch
+
 class HomeFragment: BaseFragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -26,13 +27,16 @@ class HomeFragment: BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val homeAdapter = HomeFragmentAdapter { attractionId ->
-            val navDirections = HomeFragmentDirections.actionHomeFragmentToAttractionDetailFragment(attractionId)
-            navController.navigate(navDirections)
+            activityViewModel.onAttractionSelected(attractionId)
+            navController.navigate(R.id.action_homeFragment_to_attractionDetailFragment)
         }
 
         binding.recyclerView.adapter = homeAdapter
        // binding.recyclerView.addItemDecoration(DividerItemDecoration(requireActivity()), RecyclerView.VERTICAL)
-        homeAdapter.setData(attractions)
+
+        activityViewModel.attractionListLiveData.observe(viewLifecycleOwner) { attractions ->
+            homeAdapter.setData(attractions)
+        }
 
     }
 

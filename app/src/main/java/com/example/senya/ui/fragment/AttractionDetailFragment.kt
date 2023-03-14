@@ -16,11 +16,6 @@ class AttractionDetailFragment: BaseFragment() {
     private var _binding: FragmentAttractionDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val safeArgs: AttractionDetailFragmentArgs by navArgs()
-    private val attraction: Attraction by lazy {
-        attractions.find { it.id == safeArgs.attractionId}!!
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -36,29 +31,31 @@ class AttractionDetailFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activityViewModel.selectedAttractionLiveData.observe(viewLifecycleOwner) { attraction ->
+            binding.titleTextView.text = attraction.title
+            Picasso.get().load(attraction.image_urls[0]).into(binding.headerImageView)
+            binding.monthsToVisitTextView.text = attraction.months_to_visit
+            binding.descriptionTextView.text = attraction.description
 
-        binding.titleTextView.text = attraction.title
-        Picasso.get().load(attraction.image_urls[0]).into(binding.headerImageView)
-        binding.monthsToVisitTextView.text = attraction.months_to_visit
-        binding.descriptionTextView.text = attraction.description
-
-        binding.numbersOfFactsTextView.text = "${ attraction.facts.size } facts"
-        binding.numbersOfFactsTextView.setOnClickListener {
-            val stringBuilder = StringBuilder("")
-            attraction.facts.forEach {
-                stringBuilder.append(it)
-                stringBuilder.append("\n\n")
-            }
-            val message = stringBuilder.toString().substring(0, stringBuilder.toString().lastIndexOf("\n"))
-
-            AlertDialog.Builder(requireContext())
-                .setTitle("${attraction.title} Facts")
-                .setMessage(message)
-                .setPositiveButton("Ok") { dialog, which ->
-                    dialog.dismiss()
+            binding.numbersOfFactsTextView.text = "${ attraction.facts.size } facts"
+            binding.numbersOfFactsTextView.setOnClickListener {
+                val stringBuilder = StringBuilder("")
+                attraction.facts.forEach {
+                    stringBuilder.append(it)
+                    stringBuilder.append("\n\n")
                 }
-                .show()
+                val message = stringBuilder.toString().substring(0, stringBuilder.toString().lastIndexOf("\n"))
+
+                AlertDialog.Builder(requireContext())
+                    .setTitle("${attraction.title} Facts")
+                    .setMessage(message)
+                    .setPositiveButton("Ok") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -68,10 +65,8 @@ class AttractionDetailFragment: BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menuItemlocation -> {
-                val uri = Uri.parse("geo:${attraction.location.latitude},${attraction.location.longitude}")
-                val mapIntent = Intent(Intent.ACTION_VIEW, uri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                startActivity(mapIntent)
+                val attraction = activityViewModel.selectedAttractionLiveData.value ?: return true
+                activityViewModel.locationSelectedLiveData.postValue(attraction)
                 true
             }
             else -> super.onOptionsItemSelected(item)
