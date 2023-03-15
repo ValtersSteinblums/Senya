@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
 import com.example.senya.R
 import com.example.senya.databinding.FragmentHomeBinding
 import com.example.senya.ui.fragment.BaseFragment
@@ -26,16 +24,16 @@ class HomeFragment: BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val homeAdapter = HomeFragmentAdapter { attractionId ->
+        val epoxyController = HomeFragmentController { attractionId ->
             activityViewModel.onAttractionSelected(attractionId)
             navController.navigate(R.id.action_homeFragment_to_attractionDetailFragment)
         }
 
-        binding.recyclerView.adapter = homeAdapter
+        binding.epoxyRecyclerView.setController(epoxyController)
        // binding.recyclerView.addItemDecoration(DividerItemDecoration(requireActivity()), RecyclerView.VERTICAL)
 
         activityViewModel.attractionListLiveData.observe(viewLifecycleOwner) { attractions ->
-            homeAdapter.setData(attractions)
+            epoxyController.attractions = attractions
         }
 
     }
